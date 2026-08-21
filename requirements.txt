@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+instaloader
+google-genai
+pydantic
+jinja2
+python-multipart
+python-dotenv
