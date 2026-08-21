@@ -11,7 +11,10 @@ from app.meta_api import fetch_recent_media_captions
 from app.analyzer import InstagramAIAnalyzer
 
 router = APIRouter(prefix="/creator", tags=["creator"])
-templates = Jinja2Templates(directory="app/templates")
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+templates = Jinja2Templates(directory=os.path.join(BASE_DIR, "templates"))
+
 analyzer = InstagramAIAnalyzer()
 
 @router.get("/dashboard", response_class=HTMLResponse)

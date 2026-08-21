@@ -7,9 +7,12 @@ from sqlalchemy import or_
 from app.database import get_db
 from app.models import User, CreatorProfile
 from app.auth import get_current_user
+import os
 
 router = APIRouter(prefix="/user", tags=["user"])
-templates = Jinja2Templates(directory="app/templates")
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+templates = Jinja2Templates(directory=os.path.join(BASE_DIR, "templates"))
 
 @router.get("/dashboard", response_class=HTMLResponse)
 async def user_dashboard(request: Request, q: str = None, user: User = Depends(get_current_user), db: Session = Depends(get_db)):

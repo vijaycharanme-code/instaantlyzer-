@@ -10,7 +10,10 @@ from app.models import User
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 router = APIRouter(prefix="/auth", tags=["auth"])
-templates = Jinja2Templates(directory="app/templates")
+
+# Use absolute path for reliable deployment rendering
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+templates = Jinja2Templates(directory=os.path.join(BASE_DIR, "templates"))
 
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)

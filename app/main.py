@@ -4,24 +4,28 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from starlette.middleware.sessions import SessionMiddleware
 
-# Import database and create tables
-from app.database import engine, Base
-Base.metadata.create_all(bind=engine)
-
-# Import routers
+# Import routers and models BEFORE creating tables so SQLAlchemy knows about them
+from app.models import Base
 from app.auth import router as auth_router
 from app.meta_api import router as meta_router
 from app.creator_router import router as creator_router
 from app.user_router import router as user_router
 
+# Import database and create tables
+from app.database import engine
+Base.metadata.create_all(bind=engine)
+
 app = FastAPI(title="InstaIntel Platform")
 
 # Add SessionMiddleware for cookie-based sessions
-app.add_middleware(SessionMiddleware, secret_key="super-secret-key-change-in-production")
+SESSION_SECRET = os.getenv("SESSION_SECRET", "super-secret-key-change-in-production")
+app.add_middleware(SessionMiddleware, secret_key=SESSION_SECRET)
 
 # We can keep static files if needed
-os.makedirs("app/static", exist_ok=True)
-app.mount("/static", StaticFiles(directory="app/static"), name="static")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+STATIC_DIR = os.path.join(BASE_DIR, "static")
+os.makedirs(STATIC_DIR, exist_ok=True)
+app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 # Include Routers
 app.include_router(auth_router)
