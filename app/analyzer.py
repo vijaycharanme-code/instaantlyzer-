@@ -2,7 +2,8 @@ import os
 import json
 from typing import Dict, Any
 
-from app.config import GEMINI_API_KEY
+import os
+GEMINI_API_KEY=os.getenv("GEMINI_API_KEY")
 from google import genai
 from google.genai import types
 
